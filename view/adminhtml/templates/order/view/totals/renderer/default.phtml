@@ -36,12 +36,28 @@ $customDiscount = $order->getData('custom_discount');
     .order-totals .admin__value {
         width: 50%;
     }
-    
+
 
 </style>
 
-<table class="data-table admin__table-secondary order-totals">
+    <table class="data-table admin__table-secondary order-totals">
     <tbody>
+    <tr>
+        <td class="admin__label">
+            <span><?= __('Subtotal') ?></span>
+        </td>
+        <td class="admin__value">
+            <span class="price"><?= $order->formatPrice($order->getSubtotal()) ?></span>
+        </td>
+    </tr>
+    <tr>
+        <td class="admin__label">
+            <span><?= __('Shipping & Handling') ?></span>
+        </td>
+        <td class="admin__value">
+            <span class="price"><?= $order->formatPrice($order->getShippingAmount()) ?></span>
+        </td>
+    </tr>
     <tr>
         <td class="admin__label">
             <span><?= __('Custom Discount') ?></span>
@@ -82,21 +98,7 @@ $customDiscount = $order->getData('custom_discount');
             <span class="price"><?= $order->formatPrice($order->getTotalDue()) ?></span>
         </td>
     </tr>
-    <tr>
-        <td class="admin__label">
-            <span><?= __('Subtotal') ?></span>
-        </td>
-        <td class="admin__value">
-            <span class="price"><?= $order->formatPrice($order->getSubtotal()) ?></span>
-        </td>
-    </tr>
-    <tr>
-        <td class="admin__label">
-            <span><?= __('Shipping & Handling') ?></span>
-        </td>
-        <td class="admin__value">
-            <span class="price"><?= $order->formatPrice($order->getShippingAmount()) ?></span>
-        </td>
-    </tr>
+
+
     </tbody>
 </table>
