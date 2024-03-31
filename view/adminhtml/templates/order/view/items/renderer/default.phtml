@@ -1,0 +1,53 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php /** @var \Magento\Sales\Block\Adminhtml\Order\View\Items\Renderer\DefaultRenderer $block */ ?>
+<?php $_item = $block->getItem() ?>
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$orderId = $_item->getOrderId(); // Assuming $_item is an instance of \Magento\Sales\Model\Order\ItemInterface
+
+// Load order by ID
+$order = $objectManager->create(\Magento\Sales\Model\Order::class)->load($orderId);
+
+// Check if the order exists
+if ($order->getId()) {
+    // Retrieve custom_discount from the sales_order table
+    $resource = $objectManager->get(\Magento\Framework\App\ResourceConnection::class);
+    $connection = $resource->getConnection();
+    $salesOrderTable = $resource->getTableName('sales_order');
+    $select = $connection->select()
+        ->from($salesOrderTable, ['custom_discount'])
+        ->where('entity_id = ?', $orderId);
+    $customDiscount = $connection->fetchOne($select);
+
+    // $customDiscount now contains the custom_discount value from the sales_order table
+}
+
+?>
+<?php $block->setPriceDataObject($_item) ?>
+<tr>
+    <?php $i = 0;
+    $columns = $block->getColumns();
+    $lastItemNumber = count($columns) ?>
+    <?php foreach ($columns as $columnName => $columnClass):?>
+        <?php $i++; ?>
+
+        <td class="<?= /* @noEscape */ $columnClass ?><?= /* @noEscape */ ($i === $lastItemNumber ? ' last' : '') ?>"><?= /* @escapeNotVerified */ $block->getColumnHtml($_item, $columnName) ?>
+            <?php if($columnClass == "col-product"){  ?>
+                <div class="admin__field" style="margin-top: 12%;">
+                    <label class="admin__field-label" ><strong><?php echo __("Custom Discount") ?></strong></label>
+                    <div class="admin__field-control">
+                        <div class="admin__data-grid-value"><?= $customDiscount ?></div>
+                    </div>
+                </div>
+            <?php  } ?>
+        </td>
+    <?php endforeach; ?>
+</tr>
