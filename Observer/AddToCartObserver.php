@@ -59,7 +59,7 @@ class AddToCartObserver implements ObserverInterface
                 }else{
                     $data=[
                         'custom_discount' => $customerDiscount->getValue(),
-                        'custom_type' => 'kgu'
+                        'custom_type' => $customerDiscounttype
                     ];
                     // Store the custom attribute value in cache
                     $this->cache->save(
